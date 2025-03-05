@@ -8,11 +8,12 @@ import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
-import ListItemText from '@mui/material/ListItemText'
 import CircularProgress from '@mui/material/CircularProgress'
 
 // MUI Icons
 import SendIcon from '@mui/icons-material/Send'
+
+import ReactMarkdown from 'react-markdown'
 
 import { postMessage } from '../apis/messagesService'
 
@@ -67,27 +68,33 @@ const ChatInterface = () => {
         >
           Chat
         </Typography>
-        <List sx={ { flexGrow: 1, overflowY: 'auto' } }>
+        <List 
+          sx={ { 
+            flexGrow: 1,
+            overflowY: 'auto' 
+          } }
+        >
           { messages.map( ( { sender, text }, index ) => (
               <ListItem 
-                key={index}
-                sx={ { 
-                  justifyContent: sender == 'user' ? 'flex-end' : 'flex-start' 
-                } }
+                key={index} 
+                sx={ { justifyContent: sender == 'user' ? 'flex-end' : 'flex-start' } }
               >
-                <ListItemText
-                  primary={text}
+                <Paper 
                   sx={ { 
-                    bgcolor: sender === 'user' ? 'primary.light' : 'grey.300', 
-                    p: 1,
+                    p: 1, 
+                    bgcolor: sender == 'user' ? 'primary.light' : 'grey.300',
                     borderRadius: 1 
                   } }
-                />
+                >
+                  <ReactMarkdown>{ text }</ReactMarkdown>
+                </Paper>
               </ListItem>
-            )
-          ) }
-          { loading && <CircularProgress size={24} sx={ { alignSelf: "center" } } /> }
+            ) )
+          }
         </List>
+        <div style={ { margin: 'auto'} }>
+          { loading && <CircularProgress size={24} /> }
+        </div>
         <TextField
           value={userMessage}
           variant="outlined"
@@ -95,7 +102,7 @@ const ChatInterface = () => {
           fullWidth
           autoFocus
           onChange={ e => setUserMessage( e.target.value ) }
-          onKeyDown={ e => e.key === "Enter" && handleSend() }
+          onKeyDown={ e => e.key == "Enter" && handleSend() }
           slotProps={ {
             input: {
               endAdornment:
