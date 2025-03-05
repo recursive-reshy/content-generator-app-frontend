@@ -14,30 +14,26 @@ import CircularProgress from '@mui/material/CircularProgress'
 // MUI Icons
 import SendIcon from '@mui/icons-material/Send'
 
+import { postMessage } from '../apis/messagesService'
+
 const ChatInterface = () => {
 
-  const [ input, setInput ] = useState('')
-  const [ messages, setMessages ] = useState([])
+  const [ userMessage, setUserMessage ] = useState('')
+  const [ messages, setUserMessages ] = useState([])
   const [ loading, setLoading ] = useState(false)
 
   const handleSend = async () => {
-    if ( !input.trim() ) return
+    if ( !userMessage.trim() ) return
 
-    setMessages( prevState => [ ...prevState, { sender: "user", text: input } ] )
-    setInput('')
+    setUserMessages( prevState => [ ...prevState, { sender: "user", text: userMessage } ] )
+    setUserMessage('')
     setLoading(true)
 
     try {
-      // Simulate API call to AI model
-      const response = await fetch( '/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify( { prompt: input } ),
-      } )
+      const { data: { response } } = await postMessage( { message: userMessage } )
       
-      const data = await response.json()
-      const aiMessage = { sender: 'ai', text: data.text || 'Error generating response.' }
-      setMessages( prevState => [ ...prevState, aiMessage ] )
+      const aiMessage = { sender: 'ai', text: response || 'Error generating response.' }
+      setUserMessages( prevState => [ ...prevState, aiMessage ] )
     } catch (error) {
       console.error(`Error fetching AI response: ${error}`)
     }
@@ -93,12 +89,12 @@ const ChatInterface = () => {
           { loading && <CircularProgress size={24} sx={ { alignSelf: "center" } } /> }
         </List>
         <TextField
-          value={input}
+          value={userMessage}
           variant="outlined"
           placeholder="Message"
           fullWidth
           autoFocus
-          onChange={ e => setInput( e.target.value ) }
+          onChange={ e => setUserMessage( e.target.value ) }
           onKeyDown={ e => e.key === "Enter" && handleSend() }
           slotProps={ {
             input: {
