@@ -6,6 +6,7 @@ import './App.css'
 
 // Pages
 import PageChatBot from './pages/PageChatBot'
+import PageMyStyles from './pages/PageMyStyles'
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
         />
         <Route
           path="upload"
-          element={ <h1>Upload</h1> }
+          element={ <PageMyStyles /> }
         />
       </Routes>
     </Router>
