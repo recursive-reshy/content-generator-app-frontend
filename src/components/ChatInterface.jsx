@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 
 // MUI Core
-import Container from '@mui/material/Container'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
@@ -43,81 +42,71 @@ const ChatInterface = () => {
   }
 
   return (
-    <Container 
-      maxWidth="lg"
+    <Paper
+      elevation={3}
       sx={ { 
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center', 
-        height: 'calc(100vh - 16px)',
+        flexDirection: 'column',
+        height: '100%',
+        width: '100%',
+        p: 2,
       } }
     >
-      <Paper
-        elevation={3}
+      <Typography
+        variant="h6"
+        gutterBottom
+      >
+        Chat
+      </Typography>
+      <List 
         sx={ { 
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          width: '100%',
-          p: 2,
+          flexGrow: 1,
+          overflowY: 'auto' 
         } }
       >
-        <Typography
-          variant="h6"
-          gutterBottom
-        >
-          Chat
-        </Typography>
-        <List 
-          sx={ { 
-            flexGrow: 1,
-            overflowY: 'auto' 
-          } }
-        >
-          { messages.map( ( { sender, text }, index ) => (
-              <ListItem 
-                key={index} 
-                sx={ { justifyContent: sender == 'user' ? 'flex-end' : 'flex-start' } }
+        { messages.map( ( { sender, text }, index ) => (
+            <ListItem 
+              key={index} 
+              sx={ { justifyContent: sender == 'user' ? 'flex-end' : 'flex-start' } }
+            >
+              <Paper 
+                sx={ { 
+                  p: 1, 
+                  bgcolor: sender == 'user' ? 'primary.light' : 'grey.300',
+                  borderRadius: 1 
+                } }
               >
-                <Paper 
-                  sx={ { 
-                    p: 1, 
-                    bgcolor: sender == 'user' ? 'primary.light' : 'grey.300',
-                    borderRadius: 1 
-                  } }
-                >
-                  <ReactMarkdown>{ text }</ReactMarkdown>
-                </Paper>
-              </ListItem>
-            ) )
+                <ReactMarkdown>{ text }</ReactMarkdown>
+              </Paper>
+            </ListItem>
+          ) )
+        }
+      </List>
+      <div style={ { margin: 'auto'} }>
+        { loading && <CircularProgress size={24} /> }
+      </div>
+      <TextField
+        value={userMessage}
+        variant="outlined"
+        placeholder="Message"
+        fullWidth
+        autoFocus
+        onChange={ e => setUserMessage( e.target.value ) }
+        onKeyDown={ e => e.key == 'Enter' && handleSend() }
+        slotProps={ {
+          input: {
+            endAdornment:
+              <IconButton 
+                color="primary" 
+                onClick={handleSend} 
+                disabled={loading}
+              >
+                <SendIcon />
+              </IconButton>
           }
-        </List>
-        <div style={ { margin: 'auto'} }>
-          { loading && <CircularProgress size={24} /> }
-        </div>
-        <TextField
-          value={userMessage}
-          variant="outlined"
-          placeholder="Message"
-          fullWidth
-          autoFocus
-          onChange={ e => setUserMessage( e.target.value ) }
-          onKeyDown={ e => e.key == "Enter" && handleSend() }
-          slotProps={ {
-            input: {
-              endAdornment:
-                <IconButton 
-                  color="primary" 
-                  onClick={handleSend} 
-                  disabled={loading}
-                >
-                  <SendIcon />
-                </IconButton>
-            }
-          } }
-        />
-      </Paper>
-    </Container>
+        } }
+      />
+    </Paper>
   )
 }
 
