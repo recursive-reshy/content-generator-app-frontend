@@ -1,13 +1,26 @@
+import React from 'react'
+
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+
 import './App.css'
 
-// Components
-import { ChatInterface } from './components'
+// Pages
+import PageChatBot from './pages/PageChatBot'
 
 function App() {
   return (
-    <div className="App">
-      <ChatInterface />
-    </div>
+    <Router>
+      <Routes>
+        <Route 
+          path="/"
+          element={ <PageChatBot /> }
+        />
+        <Route
+          path="upload"
+          element={ <h1>Upload</h1> }
+        />
+      </Routes>
+    </Router>
   )
 }
 
