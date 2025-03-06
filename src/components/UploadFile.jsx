@@ -3,7 +3,6 @@ import React from 'react'
 // MUI Core
 import Container from '@mui/material/Container'
 import Paper from '@mui/material/Paper'
-import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
 
