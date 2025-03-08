@@ -21,7 +21,7 @@ const VisuallyHiddenInput = styled('input')( {
   whiteSpace: 'nowrap',
 } )
 
-const UploadFile = () => {
+const UploadFile = ( { handleChange } ) => {
   return (
     <Container
       maxWidth="lg"
@@ -53,7 +53,7 @@ const UploadFile = () => {
           <VisuallyHiddenInput
             type="file"
             multiple
-            onChange={ event => console.log( event.target.files ) }
+            onChange={ event => handleChange(event) }
           />
         </Button>
       </Paper>
