@@ -14,6 +14,11 @@ axiosClient.interceptors.request.use(
     if ( process.env.REACT_APP_OPENAI_API_KEY ) {
       config.headers.Authorization = `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
     }
+    // Check if the request data is an instance of FormData
+    if (config.data instanceof FormData) {
+      // Do not set Content-Type header; let the browser/axios handle it
+      delete config.headers['Content-Type']
+    }
     return config
   },
   ( error ) => Promise.reject(error)
