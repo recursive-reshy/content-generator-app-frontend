@@ -4,12 +4,13 @@ import React from 'react'
 import Container from '@mui/material/Container'
 import Paper from '@mui/material/Paper'
 import Button from '@mui/material/Button'
+import CircularProgress from '@mui/material/CircularProgress'
 import { styled } from '@mui/material/styles'
 
 // MUI Icons
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 
-const VisuallyHiddenInput = styled('input')( {
+const Input = styled('input')( {
   position: 'absolute',
   bottom: 0,
   left: 0,
@@ -21,7 +22,11 @@ const VisuallyHiddenInput = styled('input')( {
   whiteSpace: 'nowrap',
 } )
 
-const UploadFile = ( { handleChange } ) => {
+const UploadFile = ( {
+  handleChange,
+  loading = false,
+  disabled = false,
+} ) => {
   return (
     <Container
       maxWidth="lg"
@@ -47,14 +52,19 @@ const UploadFile = ( { handleChange } ) => {
           component="label"
           role={undefined}
           tabIndex={-1}
-          startIcon={<CloudUploadIcon />}
+          startIcon={ loading ? <CircularProgress size={24} /> : <CloudUploadIcon /> }
+          disabled={disabled}
         >
-          Upload files
-          <VisuallyHiddenInput
-            type="file"
-            multiple
-            onChange={ event => handleChange(event) }
-          />
+          { !loading &&
+            <>
+              Upload files
+              <Input
+                type="file"
+                multiple
+                onChange={ event => handleChange(event) }
+              />
+            </>
+          }
         </Button>
       </Paper>
     </Container>
