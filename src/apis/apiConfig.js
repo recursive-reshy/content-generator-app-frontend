@@ -2,8 +2,9 @@ const API_ENDPOINTS = {
   messages: {
     postMessage: '/messages'
   },
-  files: {
-    uploadFiles: '/files'
+  filesApis: {
+    files: '/files',
+    deleteFile: '/files/:fileName'
   }
 }
 
