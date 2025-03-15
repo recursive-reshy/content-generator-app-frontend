@@ -28,46 +28,23 @@ const UploadFile = ( {
   disabled = false,
 } ) => {
   return (
-    <Container
-      maxWidth="lg"
-      sx={ { 
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center', 
-        height: 'calc(100vh - 16px)',
-      } }
+    <Button
+      variant="contained"
+      component="label"
+      role={undefined}
+      tabIndex={-1}
+      startIcon={ loading ? <CircularProgress size={24} /> : <CloudUploadIcon /> }
+      disabled={disabled}
     >
-      <Paper
-        elevation={3}
-        sx={ { 
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          width: '100%',
-          p: 2,
-        } }
-      >
-        <Button
-          variant="contained"
-          component="label"
-          role={undefined}
-          tabIndex={-1}
-          startIcon={ loading ? <CircularProgress size={24} /> : <CloudUploadIcon /> }
-          disabled={disabled}
-        >
-          { !loading &&
-            <>
-              Upload files
-              <Input
-                type="file"
-                multiple
-                onChange={ event => handleChange(event) }
-              />
-            </>
-          }
-        </Button>
-      </Paper>
-    </Container>
+      <>
+        Upload files
+        <Input
+          type="file"
+          multiple
+          onChange={ event => handleChange(event) }
+        />
+      </>
+    </Button>
   )
 }
 
