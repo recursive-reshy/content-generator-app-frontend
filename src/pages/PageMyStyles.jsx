@@ -2,14 +2,20 @@ import React, { useState, useEffect } from 'react'
 
 // MUI Core
 import Grid from '@mui/material/Grid2'
-import LinearProgress from '@mui/material/LinearProgress'
+import IconButton from '@mui/material/IconButton'
+
+// MUI Icons
+import DeleteIcon from '@mui/icons-material/Delete'
+import FileOpenIcon from '@mui/icons-material/FileOpen'
 
 // Componets
 import UploadFile from '../components/UploadFile'
+import DocumentList from '../components/DocumentList'
 import { Notifications } from '../components'
 
 // Services
-import { uploadFiles } from '../apis/fileService.js'
+import { uploadFiles, getFiles, deleteFile } from '../apis/fileService.js'
+
 
 const PageMyStyles = () => {
 
@@ -20,8 +26,15 @@ const PageMyStyles = () => {
   const [ uploadFilesData, setUploadFilesData ] = useState()
 
   const [ isNotificationOpen, setIsNotificationOpen ] = useState(false)
+
+  // TODO: Refactor to set to application central store
+  const [ fileList, setFileList ] = useState([])
   
   useEffect( () => {
+    if( !fileList.length ) {
+      handleGetFilesList()
+    }
+
     if( uploadFilesData ) {
       handleUploadFiles( uploadFilesData )
     }
@@ -52,12 +65,27 @@ const PageMyStyles = () => {
     }
   }
 
+  const handleGetFilesList = async () => {
+    try {
+      const { data: { files = [] } } = await getFiles()
+      setFileList(files)
+    } catch (error) {
+      console.error(`Error getting files list: ${error}`)
+    }
+  }
+
   return (
     <Grid 
       container
       sx={ { height: '100%' } }
     >
-      <Grid item size={12}>
+      <Grid 
+        item
+        size={12}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
         <UploadFile
           loading={isUploading}
           disabled={isUploading}
@@ -75,6 +103,31 @@ const PageMyStyles = () => {
             // Clear the event target values so that files of the same name can be uploaded again
             event.target.value = ''
           } }
+        />
+      </Grid>
+      <Grid item size={12}>
+        <DocumentList
+          list={fileList}
+          handleFetch={handleGetFilesList}
+          transformData={ list => list.map( ( { originalName, name, downloadURL } ) => ( { name: originalName, fileStorageName: name, downloadURL } ) ) }
+          secondaryActions={ ( { name, fileStorageName, downloadURL } ) =>
+            <>
+              <IconButton 
+                edge="end" 
+                aria-label="open"
+                onClick={ () => window.open( downloadURL, '_blank', 'noopener,noreferrer' ) }
+              >
+                <FileOpenIcon />
+              </IconButton> 
+              <IconButton 
+                edge="end"
+                aria-label="delete"
+                onClick={ () => deleteFile( fileStorageName ) }
+              >
+                <DeleteIcon />
+              </IconButton> 
+            </>
+          }
         />
       </Grid>
       <Notifications
